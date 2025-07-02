@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            margin-top: 50px;
+            background-color: #f0f0f0;
+        }
+
+        table {
+            border-collapse: collapse;
+            box-shadow: 0 0 10px #aaa;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            height: 60px;
+            font-size: 2em;
+            text-align: right;
+            background-color: #3e3e3e;
+            color: white;
+            border: none;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        td {
+            width: 80px;
+            height: 60px;
+            text-align: center;
+            vertical-align: middle;
+            font-size: 1.5em;
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.2s ease;
+        }
+
+        .digitButton {
+            background-color: #666;
+            color: white;
+        }
+
+        .operatorButton {
+            background-color: orange;
+            color: white;
+        }
+
+        .ACButton {
+            background-color: #444;
+            color: white;
+        }
+
+        td:hover {
+            filter: brightness(1.1);
+        }
+
+        td[colspan="2"] {
+            width: 160px;
+        }
+
+        td[colspan="4"] {
+            height: 60px;
+        }
+    </style>
+</head>
+<body>
+    <table border="1">
+        <tr>
+            <td colspan="4">
+                <input type="text" id="inputBox" value="0" />
+            </td>
+        </tr>
+        <tr>
+            <td class="digitButton" onclick="digitBtnPressed(7)">7</td>
+            <td class="digitButton" onclick="digitBtnPressed(8)">8</td>
+            <td class="digitButton" onclick="digitBtnPressed(9)">9</td>
+            <td class="operatorButton" onclick="operatorBtnPressed('*')">x</td>
+        </tr>
+        <tr>
+            <td class="digitButton" onclick="digitBtnPressed(4)">4</td>
+            <td class="digitButton" onclick="digitBtnPressed(5)">5</td>
+            <td class="digitButton" onclick="digitBtnPressed(6)">6</td>
+            <td class="operatorButton" onclick="operatorBtnPressed('-')">-</td>
+        </tr>
+        <tr>
+            <td class="digitButton" onclick="digitBtnPressed(1)">1</td>
+            <td class="digitButton" onclick="digitBtnPressed(2)">2</td>
+            <td class="digitButton" onclick="digitBtnPressed(3)">3</td>
+            <td class="operatorButton" onclick="operatorBtnPressed('+')">+</td>
+        </tr>
+        <tr>
+            <td class="digitButton" onclick="digitBtnPressed('.')">.</td>
+            <td class="operatorButton" onclick="operatorBtnPressed('%')">%</td>
+            <td class="operatorButton" onclick="sqrtBtnPressed()">&#8730;</td>
+            <td class="operatorButton" onclick="toggleSign()">&plusmn;</td>
+        </tr>
+        <tr>
+            <td class="operatorButton" onclick="memoryPlus()">M+</td>
+            <td class="operatorButton" onclick="memoryRecall()">MR</td>
+            <td class="operatorButton" onclick="memoryClear()">MC</td>
+            <td class="digitButton" onclick="digitBtnPressed(0)">0</td>
+        </tr>
+        <tr>
+            <td class="ACButton" onclick="btnACPressed()">AC</td>
+            <td class="operatorButton" onclick="operatorBtnPressed('/')">/</td>
+            <td class="operatorButton" colspan="2" onclick="equalsBtnPressed()">=</td>
+        </tr>
+    </table>
+
+    <script>
+        var newLine = true;
+        var value1;
+        var currentOperator;
+        let memory = 0;
+
+        function digitBtnPressed(button) {
+            if (newLine) {
+                document.getElementById("inputBox").value = button;
+                newLine = false;
+            } else {
+                var currentValue = document.getElementById("inputBox").value;
+                document.getElementById("inputBox").value = currentValue + button;
+            }
+        }
+
+        function btnACPressed() {
+            document.getElementById("inputBox").value = 0;
+            newLine = true;
+        }
+
+        function operatorBtnPressed(operator) {
+            currentOperator = operator;
+            value1 = parseFloat(document.getElementById("inputBox").value);
+            newLine = true;
+        }
+
+        function equalsBtnPressed() {
+            var value2 = parseFloat(document.getElementById("inputBox").value);
+            var finalTotal;
+
+            switch (currentOperator) {
+                case "+":
+                    finalTotal = value1 + value2;
+                    break;
+                case "-":
+                    finalTotal = value1 - value2;
+                    break;
+                case "*":
+                    finalTotal = value1 * value2;
+                    break;
+                case "/":
+                    finalTotal = value1 / value2;
+                    break;
+                case "%":
+                    finalTotal = value1 % value2;
+                    break;
+            }
+
+            document.getElementById("inputBox").value = finalTotal;
+            value1 = 0;
+            newLine = true;
+        }
+
+        function sqrtBtnPressed() {
+            let value = parseFloat(document.getElementById("inputBox").value);
+            document.getElementById("inputBox").value = Math.sqrt(value);
+            newLine = true;
+        }
+
+        function toggleSign() {
+            let currentValue = parseFloat(document.getElementById("inputBox").value);
+            document.getElementById("inputBox").value = -currentValue;
+        }
+
+        function memoryPlus() {
+            memory = parseFloat(document.getElementById("inputBox").value);
+        }
+
+        function memoryRecall() {
+            document.getElementById("inputBox").value = memory;
+            newLine = true;
+        }
+
+        function memoryClear() {
+            memory = 0;
+        }
+    </script>
+</body>
+</html>
